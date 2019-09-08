@@ -17,7 +17,7 @@ module ratio_clk
    );
 
   /* local parameters */
-  localparam  RATIO_WIDTH = 2**3;
+  localparam  RATIO_WIDTH = 2**RATIO_GRADE;
 
   /* defines */
   `define _DIFF_SIZE_(x,y)  x-y

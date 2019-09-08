@@ -8,7 +8,7 @@
 module ratio_clk_tb ();
 
   /* local parameters */
-  localparam  RATIO_GRADE = 3;                      //..ratio grade limit
+  localparam  RATIO_GRADE = 5;                      //..ratio grade limit
   localparam  RUN_CYCLES  = 200000;               //..number of cycles per simulation
   localparam  FREQ_CLK    = 50;                     //..MHz
   localparam  CLK_F       = (1000 / FREQ_CLK) / 2;  //..ns
@@ -62,12 +62,21 @@ module ratio_clk_tb ();
   /* enable simulation */
   always begin
     #`CYCLES(10)    en_i  = 1;
-    #`CYCLES(10000) en_i  = 0;
+//    #`CYCLES(10000) en_i  = 0;
   end
 
   /* ratio simulation */
-  always begin
-    #`CYCLES(2500)  ratio_i = ratio_i + 1;
+  reg [1:0] ratio_clk_cnt = 0;
+  always @ (posedge ratio_clk_o, negedge arst_n_i) begin
+    if(~arst_n_i) begin
+      ratio_clk_cnt <=  0;
+      ratio_i       <=  0;
+    end
+    else begin
+      if(&ratio_clk_cnt)
+        ratio_i <=  ratio_i + 1;
+      ratio_clk_cnt <=  ratio_clk_cnt + 1;
+    end
   end
 
 endmodule // ratio_clk_tb
